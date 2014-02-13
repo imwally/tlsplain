@@ -15,11 +15,11 @@ func (c App) Index(host string) revel.Result {
 	if host != "" {
 		certInfo, err := getcert.Fetch(host)
 		if err != nil {
+			log.Println(err.Error())
 			c.Flash.Error("Couldn't connect to the server.")
 			return c.Render()
 		}
 		c.RenderArgs["serverResults"] = certInfo
-		revel.INFO.Printf("%v", certInfo)
 	}
 	return c.Render()
 }
