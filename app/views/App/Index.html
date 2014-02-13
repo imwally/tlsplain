@@ -1,0 +1,73 @@
+{{set . "title" "Home"}}
+{{template "header.html" .}}
+
+  <div class="jumbotron">
+        <h1 style="text-align: center;">TLSplain</h1>
+        <p>If you've ever tried to "View Certificate" on a web page, you were probably
+	barraged with a mess of certificate information that was hard to figure out.
+	TLSplain helps you make sense of a TLS connection to a server.</p>
+  </div>
+
+  <div class="row">
+	<div class="col-sm-2"></div>
+        <div class="col-sm-8">
+		<h3>First Steps</h3>
+		<p>Before checking the server, you should ensure your browser
+		supports strong TLS. A good resource for this is
+		<a href="https://howsmyssl.com/">How's My SSL?</a>. Make
+		sure you have a green light. This site will assume your
+		browser supports TLS 1.2, and will check the server accordingly.
+		</p>
+	</div>
+	<div class="col-sm-2"></div>
+  </div>
+  <div class="row">
+	<div class="col-sm-2"></div>
+        <div class="col-sm-8">
+		<h3>Let's check a server.</h3>
+		<form action="/" method="post" id="server-form">
+		  <label>Host name</label><br />
+		  <input type="textbox" id="host" name="host" />&nbsp;&nbsp;
+		  <input type="submit" value="Check" />
+		</form>
+	</div>
+	<div class="col-sm-2"></div>
+  </div>
+{{if .serverResults}}
+  <div class="row">
+	<div class="col-sm-2"></div>
+        <div class="col-sm-8">
+		<h3>Results</h3>
+		{{if .serverResults.Verified}}
+		<p>The server is using a verified certificate.</p>
+		{{else}}
+		<p>The server is not using a verified certificate. This is a problem
+		if you're visiting a major site (such as Google or Facebook), but it
+		may not be a problem.</p>
+		{{end}}
+		<h4>Cryptography</h4>
+		<p><em>Forward secrecy</em>: {{.serverResults.Cipher.FS}}</p>
+		<p>Forward secrecy is an important property for secure browsing.
+		It means that if the server's key exchange key is compromised or
+		stolen at some point in the future, the person who has the key
+		cannot decrypt your sessions.</p>
+		<p><em>Key exchange and signatures</em>: {{.serverResults.Cipher.PK}}</p>
+		<p>Key exchange keys and signature keys are used to set up the
+		session. The key exchange key is used to get a session key, and
+		the server uses the signature key to prove it is the server your
+		browser thinks it is talking to.</p>
+		<p><em>Data encryption</em>: {{.serverResults.Cipher.Sym}}</p>
+		<p>Data encryption ciphers are used to actually encrypt your
+		session. This is what is used, for example, to encrypt the
+		web pages you are browsing.</p>
+		<p><em>Cryptographic strength</em>: {{.serverResults.Cipher.Strength}}</p>
+		<p>This is an estimate of the strength of the server's cryptography.</p>
+	</div>
+	<div class="col-sm-2"></div>
+  </div>
+{{end}}
+
+
+  </div>
+  </div>
+{{template "footer.html" .}}
